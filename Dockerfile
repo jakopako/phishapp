@@ -1,3 +1,4 @@
+# This is a very basic image that just installs all the dependencies and runs the python script.
 FROM ubuntu
 
 RUN apt-get update

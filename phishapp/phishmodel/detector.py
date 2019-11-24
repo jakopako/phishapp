@@ -150,7 +150,9 @@ class Detector:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--predict", help="predict the class of a given image",  action="store")
-    parser.add_argument("-t", "--train", help="train the detector", action="store")
+    parser.add_argument("-t", "--train",
+                        help="train the detector with the given training path that contains the images",
+                        action="store")
     parser.add_argument("-m", "--model", help="path of the trained model", action="store")
     args = parser.parse_args()
     detector = Detector()
