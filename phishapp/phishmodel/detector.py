@@ -36,7 +36,10 @@ class Detector:
         batch_size = 32
         epochs = 10
 
-        train_image_generator = ImageDataGenerator(rescale=1. / 255)  # Generator for our training data
+        train_image_generator = ImageDataGenerator(rescale=1. / 255,
+                                                   zoom_range=0.2,
+                                                   width_shift_range=0.2,
+                                                   height_shift_range=0.2)  # Generator for our training data
         validation_image_generator = ImageDataGenerator(rescale=1. / 255)  # Generator for our validation data
 
         train_data_gen = train_image_generator.flow_from_directory(batch_size=batch_size,
@@ -121,21 +124,19 @@ class Detector:
         with open("{}_indices.json".format(model_path.rstrip('.h5'))) as json_file:
             self.class_indices = json.load(json_file)
 
-    @staticmethod
-    def preprocess_image_from_path(image_path):
-        # Transforming my image to a 3D Tensor
+    def preprocess_image_from_path(self, image_path):
         image = tf.io.read_file(image_path)
         image = tf.image.decode_png(image, channels=3)
-        image = tf.image.resize(image, [128, 128])
-        image = image / 255.0
+        image = tf.image.resize(image, [self.IMG_HEIGHT, self.IMG_WIDTH], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+        # image = tf.image.convert_image_dtype(image, dtype=tf.float32, saturate=False)
+        image = image / 255
         return image
 
-    @staticmethod
-    def preprocess_image_from_base64(base64_string):
+    def preprocess_image_from_base64(self, base64_string):
         image = base64.b64decode(base64_string)
         image = tf.image.decode_png(image, channels=3)
-        image = tf.image.resize(image, [128, 128])
-        image = image / 255.0
+        image = tf.image.resize(image, [self.IMG_HEIGHT, self.IMG_WIDTH], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+        image = image / 255
         return image
 
     def store_model(self, model_path):
