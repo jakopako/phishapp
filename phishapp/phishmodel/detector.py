@@ -37,9 +37,9 @@ class Detector:
         epochs = 10
 
         train_image_generator = ImageDataGenerator(rescale=1. / 255,
-                                                   zoom_range=0.2,
-                                                   width_shift_range=0.2,
-                                                   height_shift_range=0.2)  # Generator for our training data
+                                                   zoom_range=0.05,
+                                                   width_shift_range=0.05,
+                                                   height_shift_range=0.05)  # Generator for our training data
         validation_image_generator = ImageDataGenerator(rescale=1. / 255)  # Generator for our validation data
 
         train_data_gen = train_image_generator.flow_from_directory(batch_size=batch_size,
@@ -130,6 +130,8 @@ class Detector:
         image = tf.image.resize(image, [self.IMG_HEIGHT, self.IMG_WIDTH], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
         # image = tf.image.convert_image_dtype(image, dtype=tf.float32, saturate=False)
         image = image / 255
+        # plt.imshow(image)
+        # plt.show()
         return image
 
     def preprocess_image_from_base64(self, base64_string):
