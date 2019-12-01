@@ -1,0 +1,61 @@
+#!/usr/local/bin/node
+
+//Example usage:
+//while read -r line; do ./headshot --output ~/tmp/suspicious_registrations/screenshots/$line.png "http://$line"; done < ~/tmp/suspicious_registrations/fake_shops_165.231.174_24
+
+const puppeteer = require('puppeteer');
+var fs = require('fs');
+var sleep = require("sleep");
+
+var args = require('minimist')(process.argv.slice(2), {
+  string: [ 'output', 'useragent' ],
+  alias: { o: 'output' , a: 'useragent', w:'width', h:'height' },
+      default: {
+        output: 'screenshot.png',
+        useragent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+      }
+  }
+);
+
+function help(){
+ console.log("headshot [--output bla.png] [--useragent '...'] [--width 1024] [--height 768] ' <url>");
+}
+
+var url = args._[0];
+if (typeof url === 'undefined'){
+    help();
+    process.exit(1);
+}
+
+var device = {
+    'userAgent': args.useragent,
+    'viewport': {
+      'width': args.width || 2000,
+      'height': args.height || 2000,
+      'deviceScaleFactor': 3,
+      'isMobile': false,
+      'hasTouch': false,
+      'isLandscape': true
+    },
+ };
+
+
+
+async function run(url){
+    try{
+        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+        const page = await browser.newPage();
+        await page.emulate(device);
+        await page.goto(url);
+        sleep.sleep(5)
+	    //await page.screenshot({ path: args.output, fullPage:true });
+	    await page.screenshot({ path: args.output, fullPage:false });
+        //console.log(new Buffer(fs.readFileSync(args.output)).toString('base64'));
+        browser.close();
+     } catch (err){
+         console.log("Getting screenshot from '"+url+"' failed: "+err);
+         process.exit(1);
+     }
+}
+
+run(url);
