@@ -9,7 +9,7 @@ classification is not very good (yet :D) but will hopefully become better in the
 include extending the image set, removing strange artifacts from the current image set (the top of
 the images currently have a black bar containing the url corresponding to the screenshot..),
 redesigning the layout of the neural network itself, etc. The current version can be tested at
-https://phishapp.dhondtdoit.ch 
+http://phishapp.dhondtdoit.ch 
 
 There are still many, many things to improve so don't expect too much. In fact, the classification
 works rather poorly on images that are not very close to the training set.
@@ -61,9 +61,9 @@ class with the according parameters.
 
 ### Remotely
 To test the publicly available API you can use the same script as above (`phishmodel/test_app.py`)
-but use `https://phishapp.dhondtdoit.ch/predict` as endpoint. In `phishapp/` do:
+but use `http://phishapp.dhondtdoit.ch/predict` as endpoint. In `phishapp/` do:
 ```
-(phishapp)$ python test_app.py -u https://phishapp.dhondtdoit.ch/predict -p ../example_images/paypal3.png
+(phishapp)$ python test_app.py -u http://phishapp.dhondtdoit.ch/predict -p ../example_images/paypal3.png
 ```
 Output:
 ```
