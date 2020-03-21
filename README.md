@@ -32,15 +32,31 @@ dir/
 
 
 ## Building and pushing the container
+
+### Azure
 Build the container locally. Tag it according to where you want to publish it. Execute
 the following command in the base directory of this repository, where the `Dockerfile` is
 located.
 ```
 $ docker build -t phishapp.azurecr.io/phishapp:latest .
 ```
-Push the image to a container registry. In my case I have chosen to try Azure.
+Push the image to a container registry.
 ```
 $ docker push phishapp.azurecr.io/phishapp
+```
+
+### Heroku
+Do
+ ```
+$ heroku container:login
+```
+then
+```
+$ heroku container:push web -a phishapp
+```
+then
+```
+$ heroku container:release web -a phishapp
 ```
 
 ## Testing
