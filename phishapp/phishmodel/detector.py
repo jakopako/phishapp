@@ -65,7 +65,7 @@ class Detector:
             MaxPooling2D((2, 2), padding='same'),
             Flatten(),
             Dense(128, activation='relu'),
-            Dense(9, activation='sigmoid')
+            Dense(11, activation='sigmoid')
         ])
 
         self.model.compile(optimizer='adam',
