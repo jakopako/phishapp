@@ -1,0 +1,1 @@
+from .screenshotdetector import ScreenshotDetector
