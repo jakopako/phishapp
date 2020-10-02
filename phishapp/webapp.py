@@ -1,10 +1,10 @@
 from flask import Flask, make_response, jsonify, request, abort
 import os
-from phishapp.phishmodel import Detector
+from phishapp.detector import ScreenshotDetector
 
 app = Flask(__name__)
 
-detector = Detector()
+detector = ScreenshotDetector()
 try:
     model_path = os.environ['MODEL_PATH']
     detector.load_model(model_path)
@@ -21,6 +21,11 @@ def predict():
     prediction = detector.predict(image)
     prediction = dict([(k, str(v)) for k, v in prediction.items()])
     return jsonify(prediction), 200
+
+
+@app.route('/detect-logo', methods=['POST'])
+def detect_logo():
+    raise NotImplementedError
 
 
 @app.errorhandler(404)
