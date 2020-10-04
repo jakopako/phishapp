@@ -28,6 +28,7 @@ class LogoDetector:
         logo_dict = {}
         for logo_brand, logo_img, logo_kp, logo_des in self.logo_kps_desc:
             img_kp, img_des = self.sift.detectAndCompute(image, None)
+            # calculate the two best matches for each feature descriptor
             matches = self.matcher.knnMatch(logo_des, img_des, k=2)
             # ratio test as per Lowe's paper https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
             good_matches = []
@@ -41,14 +42,20 @@ class LogoDetector:
                 cv2.imshow("Matches of {} logo".format(logo_brand), image_with_matches)
                 cv2.waitKey(0)
             if len(good_matches) < 0.13 * len(logo_kp):
+                # If there are too few good matches we assume that the current logo does not appear in the given image
                 continue
             else:
                 good_matches_points = np.float32([img_kp[m[0].trainIdx].pt for m in good_matches])
-                # remove outliers if there are any
+                # Remove outliers if there are any. This method is rather basic and could be improved by using some
+                # kind of clustering and thereby also taking into account multiple occurrences of the same logo.
                 good_matches_points = self.remove_outliers(good_matches_points)
                 x, y, w, h = cv2.boundingRect(good_matches_points)
                 if not self.correct_ratio(h, w, logo_img.shape[0], logo_img.shape[1]):
+                    # If the shape of the bounding box does not approximately match that of the current logo we assume
+                    # that it does not appear in the given image.
                     continue
+                # We scale the bounding box up a bit because keypoints tend to lie within the logo which means that the
+                # box just fitting those points might be a bit too small.
                 scale_factor = 2
                 x_sc = max(int(x - ((scale_factor - 1) / 2) * w), 0)
                 y_sc = max(int(y - ((scale_factor - 1) / 2) * h), 0)
@@ -61,6 +68,9 @@ class LogoDetector:
                     cv2.rectangle(tmp, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     cv2.imshow("Screenshot with {} logo box".format(logo_brand), tmp)
                     cv2.waitKey(0)
+        # If there are two logos at roughly the same coordinates something must be wrong. Currently, an example would
+        # be the postfinance screenshot. We could add a check that compares the ratio len(good_matches)/len(logo_kp)
+        # and only takes the one with the higher ratio in that case.
         return logo_dict
 
     def find_logo(self, image, logo_image):
@@ -91,7 +101,7 @@ class LogoDetector:
         """
         max_neighbour_points_check = 5  # on either side of the point to check
         min_neighbour_points = 3
-        neighbour_radius_square = 20**2
+        neighbour_radius_square = 50**2
         points = sorted(points, key=lambda p: (p[0], p[1]))
         clean_points = []
         for i in range(len(points)):
@@ -112,11 +122,12 @@ class LogoDetector:
     @staticmethod
     def correct_ratio(h1, w1, h2, w2):
         # check if orientation if the same
+        err = 40
         if h1 > w1:
-            if h2 < w2:
+            if h2 < w2 - err:
                 return False
         if h1 < w1:
-            if h2 > w2:
+            if h2 > w2 + err:
                 return False
 
         # TODO: check if ratio is similar
