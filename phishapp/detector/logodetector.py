@@ -52,8 +52,8 @@ class LogoDetector:
                 scale_factor = 2
                 x_sc = max(int(x - ((scale_factor - 1) / 2) * w), 0)
                 y_sc = max(int(y - ((scale_factor - 1) / 2) * h), 0)
-                w_sc = w * scale_factor
-                h_sc = h * scale_factor
+                w_sc = min(w * scale_factor, image.shape[1] - x_sc)
+                h_sc = min(h * scale_factor, image.shape[0] - y_sc)
                 logo_dict[logo_brand] = (x_sc, y_sc, w_sc, h_sc)
                 if debug_level >= 1:
                     tmp = np.copy(image)
@@ -61,7 +61,6 @@ class LogoDetector:
                     cv2.rectangle(tmp, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     cv2.imshow("Screenshot with {} logo box".format(logo_brand), tmp)
                     cv2.waitKey(0)
-
         return logo_dict
 
     def find_logo(self, image, logo_image):
@@ -120,9 +119,9 @@ class LogoDetector:
             if h2 > w2:
                 return False
 
-        return True
         # TODO: check if ratio is similar
         #ratio_diff = abs(h1 / w1 - h2 / w2)
+        return True
 
 
 if __name__ == '__main__':
@@ -132,7 +131,7 @@ if __name__ == '__main__':
     parser.add_argument("-i", "--image",
                         help="the image where the logos shall be found",
                         action="store")
-    parser.add_argument("-l", "--logo", help="a custom logo that shall be found in the image given by the -i option",
+    parser.add_argument("-l", "--logo", help="a custom logo to look for in the image given by the -i option",
                         action="store")
     args = parser.parse_args()
     if not args.path:
