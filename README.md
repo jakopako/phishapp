@@ -1,20 +1,24 @@
 # Phishapp
+This project currently does two things. One part tries to classify entire screenshots of phishing sites
+according to their target brand. The other part tries to find logos in screenshots.
 
-This entire project is an attempt to classify screenshots of websites according to the brand they
+## Screenshot classification
+
+The `ScreenshotDetector` attempts to classify screenshots of websites according to the brand they
 represent/target and make this functionality available through a REST API. 
 
 Currently all this is, is a neural network that has been trained on a few thousand
 images of fake login pages (or generally pages that phish for sensitive data). The quality of the
 classification is not very good (yet :D) but will hopefully become better in the future. Some ideas
 include extending the image set, removing strange artifacts from the current image set (the top of
-the images currently have a black bar containing the url corresponding to the screenshot..),
+the images currently has a black bar containing the url corresponding to the screenshot..),
 redesigning the layout of the neural network itself, etc. The current version can be tested at
 http://phishapp.dhondtdoit.ch 
 
 There are still many, many things to improve so don't expect too much. In fact, the classification
 works rather poorly on images that are not very close to the training set.
 
-## Training the Model
+### Training the Model
 
 In the package `phishapp.phishmodel` there is a `Detector` class that is used for both training
 a model and predicting based on a trained model. For details have a look at the description in
@@ -30,6 +34,12 @@ dir/
     -- class_two/
 ```
 
+## Logo Detection
+The `LogoDetector` tries to find known logos in a given image. With screenshots of websites this works rather well but I
+don't know how well it would work if the logos are somewhat distorted. However, currently the main use case of this project
+are phishing sites. 
+The logo detection works with a feature detection algorithm called SIFT. For more information checkout the comments in
+the code.
 
 ## Building and pushing the container
 
@@ -60,7 +70,7 @@ $ heroku container:release web -a phishapp
 ```
 
 ## Testing
-There are a few test images located in the `example_images` directory. You will see that not all
+There are a few test images located in the `screenshots` directory. You will see that not all
 of them are classified correctly. Note, that none of them have been used for training, however, 
 `paypal3.png` is very "close" to the majority of Paypal images that have been used for training
 whereas the other two images are less similar to the training set.
@@ -72,14 +82,14 @@ quick testing of the code the former obviously makes more sense. To post an imag
 you can use the `phishmodel/test_app.py` script.
 
 **Detector:**
-You can directly test the prediction method by invoking the script that contains the `Detector`
-class with the according parameters.
+You can directly test the prediction method by invoking the script that contains one of the detector
+classes, which are currently `ScreenshotDetector` and `LogoDetector`.
 
 ### Remotely
 To test the publicly available API you can use the same script as above (`phishmodel/test_app.py`)
-but use `http://phishapp.dhondtdoit.ch/predict` as endpoint. In `phishapp/` do:
+but use the domain `phishapp.dhondtdoit.ch` as part of the endpoint. E.g., in `phishapp/` do:
 ```
-(phishapp)$ python test_app.py -u http://phishapp.dhondtdoit.ch/predict -p ../example_images/paypal3.png
+(phishapp)$ python test_app.py -u http://phishapp.dhondtdoit.ch/predict -p ../screenshots/paypal3.png
 ```
 Output:
 ```
