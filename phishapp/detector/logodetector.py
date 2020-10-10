@@ -2,16 +2,23 @@ import argparse
 import cv2
 import os
 import numpy as np
+import base64
 
 
 class LogoDetector:
 
-    def __init__(self, logo_path):
+    def __init__(self):
         self.logo_kps_desc = []
         # Patent has expired, see https://github.com/opencv/opencv/issues/16736
         # SIFT seems to work way better than ORB in this case.
         self.sift = cv2.SIFT_create()
         self.matcher = cv2.BFMatcher.create()
+
+    def load_logos(self, logo_path):
+        """
+        This method loads the logos from logo_path and calculates the keypoints and descriptors.
+        :param logo_path: The path where the logos reside
+        """
         for filename in os.listdir(logo_path):
             logo_img = cv2.imread(os.path.join(logo_path, filename), cv2.IMREAD_GRAYSCALE)
             logo_kp, logo_des = self.sift.detectAndCompute(logo_img, None)
@@ -134,6 +141,12 @@ class LogoDetector:
         #ratio_diff = abs(h1 / w1 - h2 / w2)
         return True
 
+    @staticmethod
+    def preprocess_image_from_base64(base64_string):
+        decoded_data = base64.b64decode(base64_string)
+        np_data = np.fromstring(decoded_data, np.uint8)
+        return cv2.imdecode(np_data, cv2.IMREAD_GRAYSCALE)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -148,7 +161,8 @@ if __name__ == '__main__':
     if not args.path:
         print("Please provide a path where the logos reside.")
     else:
-        detector = LogoDetector(args.path)
+        detector = LogoDetector()
+        detector.load_logos(args.path)
         if args.logo:
             pass
         elif args.image:
