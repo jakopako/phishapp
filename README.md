@@ -40,6 +40,8 @@ don't know how well it would work if the logos are somewhat distorted. However, 
 are phishing sites. 
 The logo detection works with a feature detection algorithm called SIFT. For more information checkout the comments in
 the code.
+Currently, the process is rather slow because I am simply iterating over all the preconfigured logos, which takes some
+time. And there are many other things that can be improved, too.
 
 ## Building and pushing the container
 
