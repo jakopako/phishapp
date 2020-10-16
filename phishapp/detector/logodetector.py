@@ -20,10 +20,11 @@ class LogoDetector:
         :param logo_path: The path where the logos reside
         """
         for filename in os.listdir(logo_path):
-            logo_img = cv2.imread(os.path.join(logo_path, filename), cv2.IMREAD_GRAYSCALE)
-            logo_kp, logo_des = self.sift.detectAndCompute(logo_img, None)
-            logo_brand = filename.split('.')[0]  # logo files have to be named accordingly.
-            self.logo_kps_desc.append((logo_brand, logo_img, logo_kp, logo_des))
+            if filename.endswith('.png'):
+                logo_img = cv2.imread(os.path.join(logo_path, filename), cv2.IMREAD_GRAYSCALE)
+                logo_kp, logo_des = self.sift.detectAndCompute(logo_img, None)
+                logo_brand = filename.split('.')[0]  # logo files have to be named accordingly.
+                self.logo_kps_desc.append((logo_brand, logo_img, logo_kp, logo_des))
 
     def find_logos(self, image, debug_level=0):
         """
