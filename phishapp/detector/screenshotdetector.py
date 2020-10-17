@@ -3,14 +3,14 @@ import base64
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import json
 
 
-class Detector:
+class ScreenshotDetector:
     def __init__(self):
         self.model = None
         self.IMG_HEIGHT = 128
@@ -158,7 +158,7 @@ if __name__ == '__main__':
                         action="store")
     parser.add_argument("-m", "--model", help="path of the trained model", action="store")
     args = parser.parse_args()
-    detector = Detector()
+    detector = ScreenshotDetector()
     if args.predict:
         detector.load_model(args.model)
         pi = detector.preprocess_image_from_path(args.predict)

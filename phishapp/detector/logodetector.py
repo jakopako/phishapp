@@ -20,7 +20,11 @@ class LogoDetector:
         :param logo_path: The path where the logos reside
         """
         for filename in os.listdir(logo_path):
+<<<<<<< HEAD
             if filename.endswith('.png') or filename.endswith('.jpg'):
+=======
+            if filename.endswith('.png'):
+>>>>>>> 587032299012b447be8a8e58a662d8fee9a15e54
                 logo_img = cv2.imread(os.path.join(logo_path, filename), cv2.IMREAD_GRAYSCALE)
                 logo_kp, logo_des = self.sift.detectAndCompute(logo_img, None)
                 logo_brand = filename.split('.')[0]  # logo files have to be named accordingly.
@@ -49,9 +53,14 @@ class LogoDetector:
                 image_with_matches = cv2.drawMatchesKnn(logo_img, logo_kp, image, img_kp, good_matches, None)
                 cv2.imshow("Matches of {} logo".format(logo_brand), image_with_matches)
                 cv2.waitKey(0)
+<<<<<<< HEAD
             if len(good_matches) < 0.25 * len(logo_kp):
                 # If there are too few good matches we assume that the current logo does not appear in the given image.
                 # This threshold has been found using trial and error.
+=======
+            if len(good_matches) < 0.13 * len(logo_kp):
+                # If there are too few good matches we assume that the current logo does not appear in the given image
+>>>>>>> 587032299012b447be8a8e58a662d8fee9a15e54
                 continue
             else:
                 good_matches_points = np.float32([img_kp[m[0].trainIdx].pt for m in good_matches])
@@ -62,18 +71,28 @@ class LogoDetector:
                 if not self.correct_ratio(h, w, logo_img.shape[0], logo_img.shape[1]):
                     # If the shape of the bounding box does not approximately match that of the current logo we assume
                     # that it does not appear in the given image.
+<<<<<<< HEAD
                     # TODO: instead of using width and height of the logo_img use the bounding box of the keypoints in
                     #  the logo_img.
+=======
+>>>>>>> 587032299012b447be8a8e58a662d8fee9a15e54
                     continue
                 # We scale the bounding box up a bit because keypoints tend to lie within the logo which means that the
                 # box just fitting those points might be a bit too small.
                 scale_factor = 2
+<<<<<<< HEAD
                 x_sc_tmp = int(x - ((scale_factor - 1) / 2) * w)
                 y_sc_tmp = int(y - ((scale_factor - 1) / 2) * h)
                 x_sc = max(x_sc_tmp, 0)
                 y_sc = max(y_sc_tmp, 0)
                 w_sc = min(w * scale_factor + min(x_sc_tmp, 0), image.shape[1] - x_sc)
                 h_sc = min(h * scale_factor + min(y_sc_tmp, 0), image.shape[0] - y_sc)
+=======
+                x_sc = max(int(x - ((scale_factor - 1) / 2) * w), 0)
+                y_sc = max(int(y - ((scale_factor - 1) / 2) * h), 0)
+                w_sc = min(w * scale_factor, image.shape[1] - x_sc)
+                h_sc = min(h * scale_factor, image.shape[0] - y_sc)
+>>>>>>> 587032299012b447be8a8e58a662d8fee9a15e54
                 logo_dict[logo_brand] = (x_sc, y_sc, w_sc, h_sc)
                 if debug_level >= 1:
                     tmp = np.copy(image)
@@ -81,6 +100,12 @@ class LogoDetector:
                     cv2.rectangle(tmp, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     cv2.imshow("Screenshot with {} logo box".format(logo_brand), tmp)
                     cv2.waitKey(0)
+<<<<<<< HEAD
+=======
+        # If there are two logos at roughly the same coordinates something must be wrong. Currently, an example would
+        # be the postfinance screenshot. We could add a check that compares the ratio len(good_matches)/len(logo_kp)
+        # and only takes the one with the higher ratio in that case.
+>>>>>>> 587032299012b447be8a8e58a662d8fee9a15e54
         return logo_dict
 
     def find_logo(self, image, logo_image):
@@ -142,11 +167,14 @@ class LogoDetector:
 
         # TODO: check if ratio is similar
         #ratio_diff = abs(h1 / w1 - h2 / w2)
+<<<<<<< HEAD
         # print("h1: {}, h2: {}, w1: {}, w2: {}".format(h1, h2, w1, w2))
         # print("h1 / w1: {}".format(h1/w1))
         # print("h2 / h2: {}".format(h2/w2))
         # print("w1 / h1: {}".format(w1/h1))
         # print("w2 / h2: {}".format(w2/h2))
+=======
+>>>>>>> 587032299012b447be8a8e58a662d8fee9a15e54
         return True
 
     @staticmethod

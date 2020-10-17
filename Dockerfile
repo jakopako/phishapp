@@ -1,8 +1,9 @@
 # This is a very basic image that just installs all the dependencies and runs the python script.
-FROM ubuntu
+FROM ubuntu:latest
 
 RUN apt-get update
 RUN apt-get install python3-pip -y
+RUN DEBIAN_FRONTEND=noninteractive apt-get install libgl1-mesa-glx libglib2.0-0 -y
 
 # Set the port on which the app runs; make both values the same.
 #
@@ -17,6 +18,7 @@ WORKDIR /
 
 COPY . .
 ENV MODEL_PATH=/phishapp/files/phishing-model.h5
+ENV LOGO_PATH=/logos
 
 COPY requirements.txt /
 RUN pip3 install --no-cache-dir -U pip
