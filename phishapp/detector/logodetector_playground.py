@@ -1,6 +1,7 @@
 # resources
 # https://medium.com/open-knowledge/label-recognition-with-orb-da2b0260f4e4
 # https://ai-facets.org/robust-logo-detection-with-opencv/
+# https://stackoverflow.com/questions/22272283/opencv-feature-matching-for-multiple-images
 
 
 import cv2
