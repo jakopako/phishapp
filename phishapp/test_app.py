@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     with open(args.path, "rb") as img_file:
         img_string = base64.encodebytes(img_file.read()).decode()
-    r = requests.post(args.url, json={"image": img_string})
+    r = requests.post(args.url, json={"base64_data": img_string})
 
     parsed = json.loads(r.text)
     print(json.dumps(parsed, indent=4))

@@ -1,6 +1,8 @@
 # Phishapp
 This project currently does two things. One part tries to classify entire screenshots of phishing sites
-according to their target brand. The other part tries to find logos in screenshots.
+according to their target brand. The other part tries to find logos in screenshots. Note that the screenshot 
+classification part is disabled by default in the webapp because it uses quite some resources and doesn't work
+that well. To enable it the environment variable `ENABLE_SCREENSHOTS` has to be set.
 
 ## Screenshot classification
 
@@ -12,17 +14,16 @@ images of fake login pages (or generally pages that phish for sensitive data). T
 classification is not very good (yet :D) but will hopefully become better in the future. Some ideas
 include extending the image set, removing strange artifacts from the current image set (the top of
 the images currently has a black bar containing the url corresponding to the screenshot..),
-redesigning the layout of the neural network itself, etc. The current version can be tested at
-http://phishapp.dhondtdoit.ch 
+redesigning the layout of the neural network itself, etc.
 
 There are still many, many things to improve so don't expect too much. In fact, the classification
 works rather poorly on images that are not very close to the training set.
 
 ### Training the Model
 
-In the package `phishapp.phishmodel` there is a `Detector` class that is used for both training
+The class `ScreenshotDetector` is used for both training
 a model and predicting based on a trained model. For details have a look at the description in
-the code. The script containing the `Detector` class can be invoked directly from the commandline
+the code. The script containing the `ScreenshotDetector` class can be invoked directly from the commandline
 to train the model. The only thing that is needed is a directory with the following structure:
 ```
 dir/
@@ -36,7 +37,7 @@ dir/
 
 ## Logo Detection
 The `LogoDetector` tries to find known logos in a given image. With screenshots of websites this works rather well but I
-don't know how well it would work if the logos are somewhat distorted. However, currently the main use case of this project
+don't know how well it would work if the logos were somewhat distorted. However, currently the main use case of this project
 are phishing sites. 
 The logo detection works with a feature detection algorithm called SIFT. For more information checkout the comments in
 the code.

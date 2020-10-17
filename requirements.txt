@@ -1,5 +1,6 @@
-flask
+uvicorn
+pydantic
+fastapi
 matplotlib
 opencv-python
 numpy
-tensorflow

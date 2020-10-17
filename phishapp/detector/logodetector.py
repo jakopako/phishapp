@@ -34,8 +34,8 @@ class LogoDetector:
         :return:
         """
         logo_dict = {}
+        img_kp, img_des = self.sift.detectAndCompute(image, None)
         for logo_brand, logo_img, logo_kp, logo_des in self.logo_kps_desc:
-            img_kp, img_des = self.sift.detectAndCompute(image, None)
             # calculate the two best matches for each feature descriptor
             matches = self.matcher.knnMatch(logo_des, img_des, k=2)
             # ratio test as per Lowe's paper https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
