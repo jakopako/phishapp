@@ -22,7 +22,7 @@ if 'ENABLE_SCREENSHOTS' in os.environ:
         model_path = os.environ['MODEL_PATH']
         s_detect.load_model(model_path)
     else:
-        s_detect.load_model('phishapp/files/phishing-model/phishing-model.h5')
+        s_detect.load_model('files/phishing-model/phishing-model.h5')
 
 
 class Image(BaseModel):
