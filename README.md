@@ -4,6 +4,8 @@ according to their target brand. The other part tries to find logos in screensho
 classification part is disabled by default in the webapp because it uses quite some resources and doesn't work
 that well. To enable it the environment variable `ENABLE_SCREENSHOTS` has to be set.
 
+To see a complete list of API endpoints checkout the /doc
+
 ## Screenshot classification
 
 The `ScreenshotDetector` attempts to classify screenshots of websites according to the brand they
@@ -80,19 +82,19 @@ whereas the other two images are less similar to the training set.
 ### Locally
 **REST API:**
 There are two different ways of testing the API locally. You can either invoke the python script
-`startup.py` directly or you can first build the docker container and then run it locally. For
+`main.py` directly or you can first build the docker container and then run it locally. For
 quick testing of the code the former obviously makes more sense. To post an image to the API
-you can use the `phishmodel/test_app.py` script.
+you can use the `phishapp/test_app.py` script.
 
 **Detector:**
 You can directly test the prediction method by invoking the script that contains one of the detector
 classes, which are currently `ScreenshotDetector` and `LogoDetector`.
 
 ### Remotely
-To test the publicly available API you can use the same script as above (`phishmodel/test_app.py`)
+To test the publicly available API you can use the same script as above (`phishapp/test_app.py`)
 but use the domain `phishapp.dhondtdoit.ch` as part of the endpoint. E.g., in `phishapp/` do:
 ```
-(phishapp)$ python test_app.py -u http://phishapp.dhondtdoit.ch/predict -p ../screenshots/paypal3.png
+(phishapp)$ python test_app.py -u http://phishapp.dhondtdoit.ch/screenshot/predict -p ../screenshots/paypal3.png
 ```
 Output:
 ```
@@ -108,4 +110,19 @@ Output:
     "UBS": "5.17066e-07"
 }
 ```
-
+Or:
+```
+(phishapp)$ python test_app.py -u http://phishapp.dhondtdoit.ch/logo/detect -p ../screenshots/paypal3.png
+```
+Output:
+```
+{
+    "paypal": [
+        531,
+        209,
+        224,
+        42
+    ]
+}
+```
+where the returned array defines the bounding box `[x, y, width, height]` of the logo.

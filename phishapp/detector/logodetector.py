@@ -67,13 +67,13 @@ class LogoDetector:
                     continue
                 # We scale the bounding box up a bit because keypoints tend to lie within the logo which means that the
                 # box just fitting those points might be a bit too small.
-                scale_factor = 2
+                scale_factor = 1.5
                 x_sc_tmp = int(x - ((scale_factor - 1) / 2) * w)
                 y_sc_tmp = int(y - ((scale_factor - 1) / 2) * h)
                 x_sc = max(x_sc_tmp, 0)
                 y_sc = max(y_sc_tmp, 0)
-                w_sc = min(w * scale_factor + min(x_sc_tmp, 0), image.shape[1] - x_sc)
-                h_sc = min(h * scale_factor + min(y_sc_tmp, 0), image.shape[0] - y_sc)
+                w_sc = min(int(w * scale_factor) + min(x_sc_tmp, 0), image.shape[1] - x_sc)
+                h_sc = min(int(h * scale_factor) + min(y_sc_tmp, 0), image.shape[0] - y_sc)
                 logo_dict[logo_brand] = (x_sc, y_sc, w_sc, h_sc)
                 if debug_level >= 1:
                     tmp = np.copy(image)
@@ -93,7 +93,7 @@ class LogoDetector:
         raise NotImplementedError
 
     def get_all_supported_brands(self):
-        return [b for b, _, _, _ in self.logo_kps_desc]
+        return sorted([b for b, _, _, _ in self.logo_kps_desc])
 
     @staticmethod
     def open_image_from_path(path):
