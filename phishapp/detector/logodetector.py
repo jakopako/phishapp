@@ -78,7 +78,6 @@ class LogoDetector:
                 if debug_level >= 1:
                     tmp = np.copy(image)
                     cv2.rectangle(tmp, (x_sc, y_sc), (x_sc + w_sc, y_sc + h_sc), (0, 255, 0), 2)
-                    cv2.rectangle(tmp, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     cv2.imshow("Screenshot with {} logo box".format(logo_brand), tmp)
                     cv2.waitKey(0)
         return logo_dict
