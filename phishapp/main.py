@@ -42,7 +42,10 @@ def predict(image: Image):
 
 @app.post('/logo/detect')
 def detect_logo(image: Image):
-    image = l_detect.preprocess_image_from_base64(image.base64_data)
+    try:
+        image = l_detect.preprocess_image_from_base64(image.base64_data)
+    except Exception as e:
+        return {"error": str(e)}
     logo_positions = l_detect.find_logos(image)
     return logo_positions
 

@@ -4,9 +4,9 @@ import requests
 import argparse
 import sys
 
-# http://127.0.0.1:5000/predict
-# http://192.168.99.100:5000/predict
-# http://phishapp.dhondtdoit.ch/predict
+# http://127.0.0.1:5000/
+# http://192.168.99.100:5000/
+# http://phishapp.dhondtdoit.ch/
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
