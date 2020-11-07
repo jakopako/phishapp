@@ -13,6 +13,11 @@ class LogoDetector:
         # SIFT seems to work way better than ORB in this case.
         self.sift = cv2.SIFT_create()
         self.matcher = cv2.BFMatcher.create()
+        # FLANN parameters (FLANN seems to be slower than the BFMatcher for this use case and with these parameters.)
+        # FLANN_INDEX_KDTREE = 1
+        # index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        # search_params = dict(checks=50)  # or pass empty dictionary
+        # self.matcher = cv2.FlannBasedMatcher(index_params, search_params)
 
     def load_logos(self, logo_path):
         """
